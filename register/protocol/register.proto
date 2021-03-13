@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package protocol;
+
+message isRegisterRequest{
+  string Username = 1;
+}
+
+message RegisterRequest{
+  string Username = 1;
+  string Password = 2;
+  string Email = 3;
+  string Birthday = 4;
+  int64 Gender = 5;
+}
+
+message RegisterResponse{
+  bool status = 1;
+}
+
+
+service RegisterService{
+  // 是否注册
+  rpc IsRegistered(isRegisterRequest) returns(RegisterResponse);
+  // 准备注册
+  rpc ReadyRegister(isRegisterRequest) returns(RegisterResponse);
+}
