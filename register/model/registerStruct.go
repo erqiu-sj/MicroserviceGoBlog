@@ -87,7 +87,10 @@ func (user *Register) VerifyPassword(option, mustOption uint16) (bool, string) {
 	}
 	return true, ""
 }
-
+// VerifyUserOrEmail  验证用户名or邮箱
+// isEmail 验证字段是否为Email
+// option 验证选项
+// mustOption 验证必选项
 func (user *Register) VerifyUserOrEmail(isEmail bool, option, mustOption uint16) (bool, string) {
 	if user.Username == "" && isEmail == false {
 		return false, USEREMPTY

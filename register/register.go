@@ -18,6 +18,7 @@ var (
 type RegisterServiceImpl struct {
 }
 
+// TODO: RegisterResponse 类型缺少一个 message 类型
 // IsRegistered 判断是否注册user
 func (registerInfo *RegisterServiceImpl) IsRegistered(ctx context.Context, req *protocol.IsRegisterRequest) (*protocol.RegisterResponse, error) {
 	var response *protocol.RegisterResponse
@@ -31,6 +32,20 @@ func (registerInfo *RegisterServiceImpl) IsRegistered(ctx context.Context, req *
 
 func (registerInfo *RegisterServiceImpl) ReadyRegister(ctx context.Context, req *protocol.RegisterRequest) (*protocol.RegisterResponse, error) {
 	var response *protocol.RegisterResponse
+	response = new(protocol.RegisterResponse)
+	register := model.Register{Username: req.Username, Password: req.Password, Email: req.Email, Birthday: req.Birthday, Gender: req.Gender}
+	if register.Email != "" {
+		emailState, _ := register.VerifyUserOrEmail(true, 0, 0)
+		if !emailState {
+			response.Status = emailState
+			return response, nil
+		}
+	}
+	usrNameState, _ := register.VerifyUserOrEmail(false, model.PswOptLower&model.PswOptNumber&model.PswOptSpecial&model.PswOptUpper, model.PswOptSpecial)
+	if !usrNameState {
+		response.Status = usrNameState
+		return response, nil
+	}
 	DB.Table("register").Create(&req)
 	response = new(protocol.RegisterResponse)
 	response.Status = true
