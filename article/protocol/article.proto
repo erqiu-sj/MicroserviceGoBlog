@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package protocol;
+
+// 创建文章
+message GenerateArticleRequest{
+  string Title = 1;
+  string Introduction = 2;
+  string Content = 3;
+  string Tag = 4;
+  uint64 Top = 5;
+}
+
+// 修改文章
+message EditArticleRequest{
+  uint64 ArticleId = 1; // 文章id
+}
+
+// 删除文章
+message DeleteArticleRequest{
+  uint64 ArticleId = 1; // 文章id
+}
+
+// 查询文章
+message QueryArticleRequest{
+  uint64 ArticleId = 1; // 文章id
+}
+
+
+// 统一响应
+message Response{
+  bool Status = 1;
+  string Message = 2;
+  uint64 code = 3;
+}
+
+service ArticleService{
+  // 用流的方式创建文章
+  rpc CreateArticle(stream GenerateArticleRequest) returns(Response){};
+  // 修改文章
+  rpc ModifyArticles(EditArticleRequest) returns(Response){};
+  // 删除文章
+  rpc StrikeOutArticle(DeleteArticleRequest) returns (Response){};
+  // 查询文章
+  rpc DemandArticle(QueryArticleRequest) returns (Response){};
+}

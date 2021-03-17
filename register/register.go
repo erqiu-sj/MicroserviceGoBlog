@@ -21,18 +21,16 @@ type RegisterServiceImpl struct {
 // TODO: RegisterResponse 类型缺少一个 message 类型
 // IsRegistered 判断是否注册user
 func (registerInfo *RegisterServiceImpl) IsRegistered(ctx context.Context, req *protocol.IsRegisterRequest) (*protocol.RegisterResponse, error) {
-	var response *protocol.RegisterResponse
+	response := &protocol.RegisterResponse{}
 	DB.Find(&result, "username = ?", req.Username)
 	if result.Username == "" {
-		response = new(protocol.RegisterResponse)
 		response.Status = false
 	}
 	return response, nil
 }
 
 func (registerInfo *RegisterServiceImpl) ReadyRegister(ctx context.Context, req *protocol.RegisterRequest) (*protocol.RegisterResponse, error) {
-	var response *protocol.RegisterResponse
-	response = new(protocol.RegisterResponse)
+	response := &protocol.RegisterResponse{}
 	register := model.Register{Username: req.Username, Password: req.Password, Email: req.Email, Birthday: req.Birthday, Gender: req.Gender}
 	if register.Email != "" {
 		emailState, _ := register.VerifyUserOrEmail(true, 0, 0)
