@@ -15,8 +15,8 @@ message RegisterRequest{
 }
 
 message RegisterResponse{
-  bool status = 1;
-  string message = 2;
+  bool Status = 1;
+  string Message = 2;
 }
 
 
