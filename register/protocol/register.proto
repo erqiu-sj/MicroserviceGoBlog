@@ -19,10 +19,21 @@ message RegisterResponse{
   string Message = 2;
 }
 
+message StopRequest{
+  string StopMethod = 1;
+}
+
+message StopResponse{
+  bool Status = 1;
+  string Message = 2;
+}
+
 
 service RegisterService{
   // 是否注册
   rpc IsRegistered(isRegisterRequest) returns(RegisterResponse);
   // 准备注册
   rpc ReadyRegister(RegisterRequest) returns(RegisterResponse);
+  // 停止服务
+  rpc StopRegister (StopRequest) returns(StopResponse);
 }

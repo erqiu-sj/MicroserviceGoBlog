@@ -10,6 +10,7 @@ type RegisterService struct {
 }
 
 func main() {
+
 	conn, err := grpc.Dial("localhost:8081", grpc.WithInsecure())
 	if err != nil {
 		panic(errors.New("连接注册服务出错"))
