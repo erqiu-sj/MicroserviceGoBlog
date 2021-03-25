@@ -10,6 +10,9 @@ import (
 const (
 	TCP  = "127.0.0.1"
 	HTTP = "http://127.0.0.1"
+	// 注册
+	//Error reading registration information
+	ERRORREADINGREGISTERTIONINFOMATION = "读取注册信息出错"
 )
 
 var (

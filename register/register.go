@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	Port = 8081
+	PORT = 8081
 )
 
 var (
@@ -82,12 +82,13 @@ func main() {
 		Name:    "register",
 		Tags:    []string{"register", "verifyRegister"},
 		Address: globalVariable.TCP,
-		Port:    Port,
+		Port:    PORT,
 		Check: &api.AgentServiceCheck{
-			CheckID:  "checkRegister",
-			Name:     "registerUser",
-			TCP:      fmt.Sprint(globalVariable.TCP, Port),
-			Interval: "5s",
+			CheckID: "checkRegister",
+			Name:    "registerUser",
+			//HTTP:    fmt.Sprint(globalVariable.HTTP, ":", PORT),
+			TCP:      fmt.Sprint(globalVariable.TCP, ":", PORT),
+			Interval: "10s",
 			Timeout:  "5s",
 		},
 	}
@@ -95,6 +96,7 @@ func main() {
 
 	registerServiceHandle = grpc.NewServer()
 	protocol.RegisterRegisterServiceServer(registerServiceHandle, new(RegisterServiceImpl))
-	monitor, _ := net.Listen("tcp", ":8081")
+	monitor, _ := net.Listen("tcp", ":8082")
+	fmt.Println("register service start!")
 	registerServiceHandle.Serve(monitor)
 }

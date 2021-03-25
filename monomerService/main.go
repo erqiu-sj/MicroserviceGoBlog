@@ -2,6 +2,7 @@ package main
 
 import (
 	"MicroserviceGoBlog/monomerService/globalVariable"
+	"MicroserviceGoBlog/monomerService/router"
 	registerModel "MicroserviceGoBlog/register/model"
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/mysql"
@@ -19,7 +20,7 @@ func init() {
 
 func main() {
 	Server := gin.Default()
-	Server.POST("/register")
+	Server.POST("/register", router.Register)
 	if err := Server.Run(":3000"); err != nil {
 		log.Fatal("服务器启动失败")
 	}

@@ -11,8 +11,8 @@ message LoginRequest {
 // LoginResponse 登陆响应
 message LoginResponse{
   bool Status = 1;
-  string message = 2;
-  uint64 code = 3;
+  string Message = 2;
+  uint64 HttpCode = 3;
 }
 
 service LoginService {
