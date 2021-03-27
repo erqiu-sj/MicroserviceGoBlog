@@ -1,7 +1,9 @@
 package globalVariable
 
 import (
+	registerModel "MicroserviceGoBlog/register/model"
 	"github.com/gin-gonic/gin"
+	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
@@ -13,9 +15,16 @@ const (
 	// 注册
 	//Error reading registration information
 	ERRORREADINGREGISTERTIONINFOMATION = "读取注册信息出错"
+	DbConf                             = "root:Qsj.0228@tcp(127.0.0.1:3306)/Blog?charset=utf8&parseTime=True&loc=Local"
 )
 
 var (
 	GinService *gin.Engine
 	Db         *gorm.DB
 )
+
+// DbInit 初始化数据库
+func DbInit() {
+	Db, _ = gorm.Open(mysql.Open(DbConf), &gorm.Config{})
+	Db.AutoMigrate(&registerModel.Register{})
+}

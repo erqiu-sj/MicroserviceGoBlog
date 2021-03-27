@@ -3,26 +3,24 @@ package main
 import (
 	"MicroserviceGoBlog/monomerService/globalVariable"
 	"MicroserviceGoBlog/monomerService/router"
-	registerModel "MicroserviceGoBlog/register/model"
+	"MicroserviceGoBlog/monomerService/utils"
+	"fmt"
 	"github.com/gin-gonic/gin"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
-	"log"
 )
 
 func init() {
-	dbConf := "root:Qsj.0228@tcp(127.0.0.1:3306)/Blog?charset=utf8&parseTime=True&loc=Local"
 	globalVariable.GinService = gin.Default()
-	globalVariable.Db, _ = gorm.Open(mysql.Open(dbConf), &gorm.Config{})
-	globalVariable.Db.AutoMigrate(&registerModel.Register{})
-	globalVariable.GinService.Run(":3000")
+	globalVariable.GinService.Use(utils.Cors())
+	globalVariable.DbInit()
+	sql, _ := globalVariable.Db.DB()
+	sql.SetMaxIdleConns(10)
+	sql.SetMaxOpenConns(100)
+	gin.SetMode(gin.ReleaseMode)
 }
 
 func main() {
-	Server := gin.Default()
-	Server.POST("/register", router.Register)
-	if err := Server.Run(":3000"); err != nil {
-		log.Fatal("服务器启动失败")
-	}
-
+	globalVariable.GinService.POST("/register", router.Register)
+	fmt.Println("gin service start!")
+	fmt.Println(globalVariable.Db, "TYPE!")
+	_ = globalVariable.GinService.Run(":3000")
 }

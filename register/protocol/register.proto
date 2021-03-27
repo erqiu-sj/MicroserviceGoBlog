@@ -12,10 +12,9 @@ message RegisterRequest{
   string Birthday = 4;
   int64 Gender = 5;
 }
-// TODO： 需要一个httpCode状态码
 message RegisterResponse{
   bool Status = 1;
-  int64 httpCode = 2;
+  int64 HttpCode = 2;
   string Message = 3;
 }
 

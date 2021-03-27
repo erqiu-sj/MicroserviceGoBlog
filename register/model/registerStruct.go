@@ -28,11 +28,11 @@ type VerificationSpecification interface {
 	VerifyPassword(option, mustOption uint16) (bool, string)                  // 验证密码是否符合规范
 }
 type Register struct {
-	Username string `gorm:""` // 用户名
-	Password string `gorm:""` // 密码
-	Email    string `gorm:""` // 邮箱
-	Birthday string `gorm:""` // 生日
-	Gender   int64  `gorm:""` // 性别
+	Username string `gorm:"TYPE:VARCHAR(16);NOT NULL;UNIQUE"`      // 用户名
+	Password string `gorm:"TYPE:VARCHAR(100);NOT NULL;"`           // 密码
+	Email    string `gorm:"TYPE:VARCHAR(30);UNIQUE;DEFAULT:'nil'"` // 邮箱
+	Birthday string `gorm:"TYPE:VARCHAR(50);"`                     // 生日
+	Gender   int64  `gorm:"TYPE:INT;DEFAULT:1"`                    // 性别
 	gorm.Model
 }
 
