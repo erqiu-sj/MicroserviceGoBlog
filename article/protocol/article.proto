@@ -31,7 +31,7 @@ message QueryArticleRequest{
 message Response{
   bool Status = 1;
   string Message = 2;
-  uint64 code = 3;
+  uint64 HttpStatus = 3;
 }
 
 service ArticleService{

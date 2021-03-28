@@ -18,6 +18,4 @@ message LoginResponse{
 service LoginService {
   // 准备登陆
   rpc ReadyLogin(LoginRequest) returns(LoginResponse){};
-  // 是否注册，调用注册服务
-  rpc IsRegister(LoginRequest) returns(LoginResponse){};
 }
