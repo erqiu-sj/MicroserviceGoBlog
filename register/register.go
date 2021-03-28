@@ -61,7 +61,9 @@ func (registerInfo *RegisterServiceImpl) ReadyRegister(_ context.Context, req *p
 			return response, nil
 		}
 	}
-	usrNameState, usrMessage := register.VerifyUserOrEmail(false, model.PswOptLower&model.PswOptNumber&model.PswOptSpecial&model.PswOptUpper, model.PswOptSpecial)
+	usrNameState, usrMessage := register.VerifyUserOrEmail(false,
+		model.PswOptLower&model.PswOptNumber&model.PswOptSpecial&model.PswOptUpper,
+		model.PswOptSpecial)
 	if !usrNameState {
 		// 用户名验证失败
 		response.Status = usrNameState
@@ -73,6 +75,7 @@ func (registerInfo *RegisterServiceImpl) ReadyRegister(_ context.Context, req *p
 	globalVariable.Db.Table("register").Create(&req)
 	response.Status = true
 	response.HttpCode = http.StatusOK
+	response.Message = model.REGISTRATIONSUCCESS
 	fmt.Println("创建成功", response)
 	return response, nil
 }
@@ -91,7 +94,8 @@ func (registerInfo *RegisterServiceImpl) StopRegister(_ context.Context, req *pr
 }
 
 func main() {
-	globalVariable.DbInit()
+	sql, _ := globalVariable.DbInit().DB()
+	defer sql.Close()
 	// 往consul中注册服务
 	registerServiceConsulConf := api.DefaultConfig()
 	registerClient, _ := api.NewClient(registerServiceConsulConf)

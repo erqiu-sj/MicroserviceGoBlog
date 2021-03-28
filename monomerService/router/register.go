@@ -28,12 +28,10 @@ func Register(C *gin.Context) {
 	var p param
 	if err := C.ShouldBindJSON(&p); err != nil {
 		// 服务器出错
+		fmt.Println(err)
 		utils.ReturnData(C, http.StatusInternalServerError, globalVariable.ERRORREADINGREGISTERTIONINFOMATION)
 		return
 	}
-	fmt.Println(p, "params")
-	fmt.Println(p.IsRegister, "isRegister")
-	fmt.Println(p.Username, "user")
 	// consul 寻找服务
 	registerDefaultConf := api.DefaultConfig()
 	registerClient, _ := api.NewClient(registerDefaultConf)
@@ -48,7 +46,10 @@ func Register(C *gin.Context) {
 	if p.IsStop && p.StopMethod != "" {
 		// 关闭注册服务
 		stopStatus, _ := registerServiceClient.StopRegister(context.TODO(), &protocol.StopRequest{StopMethod: p.StopMethod})
-		utils.ReturnData(C, http.StatusOK, stopStatus.GetMessage())
+		utils.ReturnData(C, http.StatusOK, map[string]interface{}{
+			"code":    stopStatus.GetStatus(),
+			"results": stopStatus.GetMessage(),
+		})
 		return
 	}
 	if p.IsRegister {
@@ -60,7 +61,10 @@ func Register(C *gin.Context) {
 		if isRegisterResult.GetStatus() {
 			// 已注册，逻辑推出
 			fmt.Println("no register!", isRegisterResult.GetStatus())
-			utils.ReturnData(C, utils.Int64ToInt(isRegisterResult.GetHttpCode()), isRegisterResult.GetMessage())
+			utils.ReturnData(C, http.StatusOK, map[string]interface{}{
+				"code":    isRegisterResult.GetHttpCode(),
+				"results": isRegisterResult.GetMessage(),
+			})
 			return
 		} else {
 			// 未注册，调起注册服务
@@ -74,13 +78,17 @@ func Register(C *gin.Context) {
 			fmt.Println("registerStatus", registerResult.GetStatus())
 			if !registerResult.GetStatus() {
 				// 注册失败
-				fmt.Println("注册失败!", registerResult.GetMessage(), registerResult.GetHttpCode())
-				utils.ReturnData(C, utils.Int64ToInt(registerResult.GetHttpCode()), registerResult.GetMessage())
+				utils.ReturnData(C, http.StatusOK, map[string]interface{}{
+					"code":    utils.Int64ToInt(registerResult.GetHttpCode()),
+					"results": registerResult.GetMessage(),
+				})
 				return
 			} else {
 				// 注册成功
-				fmt.Println("注册成功!", registerResult.GetMessage(), registerResult.GetHttpCode())
-				utils.ReturnData(C, utils.Int64ToInt(registerResult.GetHttpCode()), registerResult.GetMessage())
+				utils.ReturnData(C, http.StatusOK, map[string]interface{}{
+					"code":    registerResult.GetHttpCode(),
+					"results": registerResult.GetMessage(),
+				})
 				return
 			}
 		}

@@ -4,23 +4,29 @@ import (
 	"MicroserviceGoBlog/monomerService/globalVariable"
 	"MicroserviceGoBlog/monomerService/router"
 	"MicroserviceGoBlog/monomerService/utils"
+	registerModel "MicroserviceGoBlog/register/model"
+	"database/sql"
 	"fmt"
 	"github.com/gin-gonic/gin"
+)
+
+var (
+	sqlCon *sql.DB
 )
 
 func init() {
 	globalVariable.GinService = gin.Default()
 	globalVariable.GinService.Use(utils.Cors())
-	globalVariable.DbInit()
-	sql, _ := globalVariable.Db.DB()
-	sql.SetMaxIdleConns(10)
-	sql.SetMaxOpenConns(100)
+	sqlCon, _ = globalVariable.DbInit().DB()
+	globalVariable.Db.AutoMigrate(&registerModel.Register{})
+	sqlCon.SetMaxIdleConns(10)
+	sqlCon.SetMaxOpenConns(100)
 	gin.SetMode(gin.ReleaseMode)
 }
 
 func main() {
+	defer sqlCon.Close()
 	globalVariable.GinService.POST("/register", router.Register)
 	fmt.Println("gin service start!")
-	fmt.Println(globalVariable.Db, "TYPE!")
 	_ = globalVariable.GinService.Run(":3000")
 }

@@ -20,7 +20,8 @@ const (
 	USERTOLONG                     = "用户名过长"
 	EMAILEMPTY                     = "邮箱为空"
 	EMAILNONSTANDARD               = "邮箱不符合规范"
-	USERINCORRECTSPECIFICATION     = "密码可为12为，含数字大小写特殊符号"
+	USERINCORRECTSPECIFICATION     = "密码可为12位，含数字大小写特殊符号"
+	REGISTRATIONSUCCESS            = "注册成功"
 )
 
 type VerificationSpecification interface {
@@ -105,7 +106,7 @@ func (user *Register) VerifyUserOrEmail(isEmail bool, option, mustOption uint16)
 	if isEmail && !VerifyEmailFormat(user.Email) {
 		return false, EMAILNONSTANDARD
 	}
-	if !isEmail && !GeneralValidation(user.Username, option, mustOption) {
+	if !isEmail && GeneralValidation(user.Username, option, mustOption) {
 		return false, USERINCORRECTSPECIFICATION
 	}
 	if isEmail {

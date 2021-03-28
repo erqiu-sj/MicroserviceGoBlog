@@ -1,7 +1,6 @@
 package globalVariable
 
 import (
-	registerModel "MicroserviceGoBlog/register/model"
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -24,7 +23,7 @@ var (
 )
 
 // DbInit 初始化数据库
-func DbInit() {
+func DbInit() *gorm.DB {
 	Db, _ = gorm.Open(mysql.Open(DbConf), &gorm.Config{})
-	Db.AutoMigrate(&registerModel.Register{})
+	return Db
 }

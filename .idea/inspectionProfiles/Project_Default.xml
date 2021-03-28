@@ -16,6 +16,7 @@
         <method importPath="gorm.io/gorm" receiver="*DB" name="AutoMigrate" />
         <method importPath="google.golang.org/grpc" receiver="*Server" name="Serve" />
         <method importPath="google.golang.org/grpc" receiver="*ClientConn" name="Close" />
+        <method importPath="database/sql" receiver="*DB" name="Close" />
       </methods>
     </inspection_tool>
   </profile>
