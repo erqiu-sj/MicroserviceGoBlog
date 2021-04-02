@@ -5,11 +5,9 @@ import (
 	"MicroserviceGoBlog/register/model"
 	"MicroserviceGoBlog/register/protocol"
 	"context"
-	"errors"
 	"fmt"
 	"github.com/hashicorp/consul/api"
 	"google.golang.org/grpc"
-	"net"
 	"net/http"
 )
 
@@ -116,12 +114,20 @@ func main() {
 	}
 	_ = registerClient.Agent().ServiceRegister(&registerReg)
 
-	registerServiceHandle = grpc.NewServer()
-	protocol.RegisterRegisterServiceServer(registerServiceHandle, new(RegisterServiceImpl))
-	monitor, listenErr := net.Listen("tcp", ":8082")
-	fmt.Println("register service start!", globalVariable.Db)
-	if listenErr != nil {
-		panic(errors.New(listenErr.Error()))
-	}
-	registerServiceHandle.Serve(monitor)
+	globalVariable.MicroserviceInit(func(handle *grpc.Server) {
+		registerServiceHandle = handle
+		protocol.RegisterRegisterServiceServer(registerServiceHandle, new(RegisterServiceImpl))
+	}, func() {
+		fmt.Println("register service start!")
+	}, func(err string) {
+		panic(err)
+	}, 8082)
+	//registerServiceHandle = grpc.NewServer()
+	//protocol.RegisterRegisterServiceServer(registerServiceHandle, new(RegisterServiceImpl))
+	//monitor, listenErr := net.Listen("tcp", ":8082")
+	//fmt.Println("register service start!", globalVariable.Db)
+	//if listenErr != nil {
+	//	panic(errors.New(listenErr.Error()))
+	//}
+	//registerServiceHandle.Serve(monitor)
 }
