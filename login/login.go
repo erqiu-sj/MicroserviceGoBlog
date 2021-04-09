@@ -1,6 +1,7 @@
 package main
 
 import (
+	loginStruct "MicroserviceGoBlog/login/model"
 	"MicroserviceGoBlog/login/protocol"
 	"MicroserviceGoBlog/monomerService/globalVariable"
 	"MicroserviceGoBlog/register/model"
@@ -26,22 +27,21 @@ func (that *LoginImpl) ReadyLogin(_ context.Context, req *protocol.LoginRequest)
 	response := &protocol.LoginResponse{}
 	var registerResult *model.Register
 	registerResult = new(model.Register)
-	globalVariable.Db.Table("registers").Find(&registerResult, "username = ?", req.Username)
-	if registerResult.Username == "" {
+	globalVariable.Db.Table("registers").Find(&registerResult, "username = ?,email = ?", req.Username, req.Email)
+	if registerResult.Username == "" && registerResult.Email == "" {
 		// 没有注册的情况
 		response.Status = false
 		response.HttpCode = http.StatusNoContent
-		response.Message = "用户未注册,请先注册"
+		response.Message = loginStruct.REGISTERFIRST
 		return response, nil
 	}
 	globalVariable.Db.Table("logins").Create(&req)
 	response.Status = true
-	response.Message = "登陆成功"
+	response.Message = loginStruct.LOGINSUCCESS
 	response.HttpCode = http.StatusOK
 	return response, nil
 
 }
-
 func main() {
 	sql, _ := globalVariable.DbInit().DB()
 	defer sql.Close()
@@ -71,14 +71,5 @@ func main() {
 	}, func(err string) {
 		panic(err)
 	}, 8083)
-	//loginServiceHandle = grpc.NewServer()
-	//protocol.RegisterLoginServiceServer(loginServiceHandle, new(LoginImpl))
-	//
-	//monitor, listenErr := net.Listen("tcp", ":8083")
-	//fmt.Println("login service start!")
-	//if listenErr != nil {
-	//	panic(errors.New(listenErr.Error()))
-	//}
-	//loginServiceHandle.Serve(monitor)
 
 }

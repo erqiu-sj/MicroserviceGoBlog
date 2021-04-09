@@ -122,12 +122,5 @@ func main() {
 	}, func(err string) {
 		panic(err)
 	}, 8082)
-	//registerServiceHandle = grpc.NewServer()
-	//protocol.RegisterRegisterServiceServer(registerServiceHandle, new(RegisterServiceImpl))
-	//monitor, listenErr := net.Listen("tcp", ":8082")
-	//fmt.Println("register service start!", globalVariable.Db)
-	//if listenErr != nil {
-	//	panic(errors.New(listenErr.Error()))
-	//}
-	//registerServiceHandle.Serve(monitor)
+
 }

@@ -12,6 +12,12 @@ type Login struct {
 	LastLogin time.Time // 最后一次登陆时间
 	gorm.Model
 }
+
+const (
+	REGISTERFIRST = "用户未注册,请先注册"
+	LOGINSUCCESS  = "登陆成功"
+)
+
 type LoginVerification interface {
 	VerifyEmailFormat() bool
 }
