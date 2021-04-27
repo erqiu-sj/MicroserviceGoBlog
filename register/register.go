@@ -9,6 +9,7 @@ import (
 	"github.com/hashicorp/consul/api"
 	"google.golang.org/grpc"
 	"net/http"
+	"time"
 )
 
 const (
@@ -93,6 +94,9 @@ func (registerInfo *RegisterServiceImpl) StopRegister(_ context.Context, req *pr
 
 func main() {
 	sql, _ := globalVariable.DbInit().DB()
+	sql.SetMaxOpenConns(20)
+	sql.SetMaxIdleConns(3)
+	sql.SetConnMaxLifetime(5 * time.Minute)
 	defer sql.Close()
 	// 往consul中注册服务
 	registerServiceConsulConf := api.DefaultConfig()

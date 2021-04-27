@@ -1,0 +1,35 @@
+syntax = "proto3"
+
+package protocol;
+
+// 修改文章
+message EditArticleRequest{
+  uint64 ArticleId = 1; // 文章id
+}
+
+// 删除文章
+message DeleteArticleRequest{
+  uint64 ArticleId = 1; // 文章id
+}
+
+// 留言
+message LeaveMessageRequest{
+  uint64 ArticleId = 1; // 文章id
+  string Message = 2; // 留言内容
+  bool Start = 3; // 点赞
+  bool Report = 4; // 举报
+}
+
+// 统一响应
+message Response{
+  bool Status = 1;
+  string Message = 2;
+  uint64 HttpStatus = 3;
+}
+
+service ArticleService{
+  // 修改文章
+  rpc ModifyArticles(EditArticleRequest) returns(Response){};
+  // 删除文章
+  rpc StrikeOutArticle(DeleteArticleRequest) returns (Response){};
+}

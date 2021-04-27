@@ -34,14 +34,14 @@ func (article *Article) VerificationIntroduction() bool {
 }
 
 func (article *Article) VerificationContent() bool {
-	if len(article.Content) <= 50 {
+	if len(article.Content) <= 10000 {
 		return false
 	}
 	return true
 }
 
 func (article *Article) VerificationTag() bool {
-	if len(article.Tag) < 2 {
+	if len(article.Tag) < 20 {
 		return false
 	}
 	return true
